@@ -1,0 +1,49 @@
+name: Synkroniser hyttecal
+
+on:
+  schedule:
+    # Kjører hver natt kl. 03:00 UTC (05:00 norsk sommertid / 04:00 normaltid)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Tillat manuell kjøring
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Sjekk ut kode
+        uses: actions/checkout@v4
+
+      - name: Sett opp pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Sett opp Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Installer avhengigheter
+        run: pnpm install --frozen-lockfile
+
+      - name: Installer Playwright-nettleser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Kjør skraper og generer kalender
+        run: pnpm start
+
+      - name: Commit og push oppdatert kalender
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add calendar/hyttecal.ics
+          if git diff --staged --quiet; then
+            echo "Ingen endringer i kalenderen."
+          else
+            git commit -m "Oppdater hyttecal.ics [$(date -u '+%Y-%m-%d')]"
+            git push
+          fi
