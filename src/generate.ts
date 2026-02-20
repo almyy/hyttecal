@@ -21,6 +21,8 @@ export function generateCalendar(bookings: DateRange[]): void {
     calendar.createEvent({
       summary: 'Hytte opptatt',
       start,
+      stamp: new Date(start),
+      id: start.toISOString() + '-' + end.toISOString(),
       end: exclusiveEnd,
       allDay: true,
       timezone: 'Europe/Oslo',
