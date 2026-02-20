@@ -34,7 +34,7 @@ https://<ditt-brukernavn>.github.io/hyttecal/hyttecal.ics
 
 1. Gå til **Settings** → **Pages** i dette repositoriet
 2. Under **Source**, velg **Deploy from a branch**
-3. Velg branch `main` og mappen `/calendar`
+3. Velg branch `main` og mappen `/docs`
 4. Klikk **Save**
 
 Etter noen minutter vil kalenderfilen være tilgjengelig på URL-en over.
@@ -56,4 +56,4 @@ Du kan trigge en synkronisering manuelt under **Actions** → **Synkroniser hytt
 | Automatisering | GitHub Actions (nightly cron) |
 | Hosting | GitHub Pages |
 
-Kalenderfilen genereres i `calendar/hyttecal.ics` og committes automatisk ved endringer.
+Kalenderfilen genereres i `docs/hyttecal.ics` og committes automatisk ved endringer.

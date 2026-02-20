@@ -3,7 +3,7 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { DateRange } from './scrape.js';
 
-const OUTPUT_DIR = join(process.cwd(), 'calendar');
+const OUTPUT_DIR = join(process.cwd(), 'docs');
 const OUTPUT_FILE = join(OUTPUT_DIR, 'hyttecal.ics');
 
 export function generateCalendar(bookings: DateRange[]): void {
