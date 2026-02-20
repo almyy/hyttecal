@@ -20,15 +20,27 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          
+
       - name: corepack
         run: corepack enable
 
       - name: Installer avhengigheter
         run: pnpm install --frozen-lockfile
 
-      - name: Installer Playwright-nettleser
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Infer playwright version
+        shell: bash
+        run: |
+          echo "PLAYWRIGHT_VERSION=$(pnpm list @playwright/test --json --depth=0 | jq -r '.[0].devDependencies.["@playwright/test"].version')" >> $GITHUB_ENV
+      - name: Cache playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          key: playwright-${{ env.PLAYWRIGHT_VERSION }}
+          path: ~/.cache/ms-playwright
+      - name: Install Playwright browsers
+        shell: bash
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm playwright install --with-deps chromium
 
       - name: Kjør skraper og generer kalender
         run: pnpm start
